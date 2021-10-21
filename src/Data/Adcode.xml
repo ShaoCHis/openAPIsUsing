@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<response>
+    <status>1</status>
+    <info>OK</info>
+    <infocode>10000</infocode>
+    <count>1</count>
+    <geocodes type="list">
+        <geocode>
+            <formatted_address>上海市嘉定区</formatted_address>
+            <country>中国</country>
+            <province>上海市</province>
+            <citycode>021</citycode>
+            <city>上海市</city>
+            <district>嘉定区</district>
+            <township></township>
+            <neighborhood>
+                <name></name>
+                <type></type>
+            </neighborhood>
+            <building>
+                <name></name>
+                <type></type>
+            </building>
+            <adcode>310114</adcode>
+            <street></street>
+            <number></number>
+            <location>121.265300,31.375602</location>
+            <level>区县</level>
+        </geocode>
+    </geocodes>
+</response>

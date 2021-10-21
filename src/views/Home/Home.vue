@@ -44,17 +44,34 @@ export default {
         methods: 'get',
         params: {
           key: '5c49a29bd677e41e010643b3e3cd1850',
-          address: that.input
+          address: that.input,
+          output: "XML"
         }
       }).then((res) => {
-        console.log(res)
-        if (res.data.count == "0") {
+        let parser=null;
+        let xmlDoc=null;
+        if (window.DOMParser)
+        {
+          parser=new DOMParser();
+          xmlDoc=parser.parseFromString(res.data,"text/xml");
+        }
+        else // Internet Explorer
+        {
+          // eslint-disable-next-line no-undef
+          xmlDoc=new ActiveXObject("Microsoft.XMLDOM");
+          xmlDoc.async=false;
+          xmlDoc.loadXML(res.data);
+        }
+        if (xmlDoc.getElementsByTagName("count")[0].childNodes[0].nodeValue == "0") {
           that.$message.error("City is wrong!Please try again!");
         } else {
-          that.adcode = res.data.geocodes[0].adcode;
-          that.location = res.data.geocodes[0].location;
-          that.title = res.data.geocodes[0].formatted_address;
-          that.$message.success("this is " + res.data.geocodes[0].formatted_address + "'s information!");
+          that.adcode=xmlDoc.getElementsByTagName("adcode")[0].childNodes[0].nodeValue
+          // that.adcode = res.data.geocodes[0].adcode;
+          that.location=xmlDoc.getElementsByTagName("location")[0].childNodes[0].nodeValue
+          // that.location = res.data.geocodes[0].location;
+          that.title=xmlDoc.getElementsByTagName("formatted_address")[0].childNodes[0].nodeValue
+          // that.title = res.data.geocodes[0].formatted_address;
+          that.$message.success("this is " + that.title + "'s information!");
           that.goDataPage();
         }
       }).catch((res) => {
@@ -77,8 +94,8 @@ export default {
     submit() {
       this.$message.warning("Searching!Please Waiting!");
       this.getAdcode();
-    }
-  }
+    },
+  },
 }
 </script>
 

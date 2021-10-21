@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<response>
+    <status>1</status>
+    <count>1</count>
+    <info>OK</info>
+    <infocode>10000</infocode>
+    <forecasts type="list">
+        <forecast>
+            <city>上海市</city>
+            <adcode>310000</adcode>
+            <province>上海</province>
+            <reporttime>2021-10-20 09:03:26</reporttime>
+            <casts type="list">
+                <cast>
+                    <date>2021-10-20</date>
+                    <week>3</week>
+                    <dayweather>小雨</dayweather>
+                    <nightweather>小雨</nightweather>
+                    <daytemp>15</daytemp>
+                    <nighttemp>12</nighttemp>
+                    <daywind>北</daywind>
+                    <nightwind>北</nightwind>
+                    <daypower>4</daypower>
+                    <nightpower>4</nightpower>
+                </cast>
+                <cast>
+                    <date>2021-10-21</date>
+                    <week>4</week>
+                    <dayweather>阴</dayweather>
+                    <nightweather>多云</nightweather>
+                    <daytemp>16</daytemp>
+                    <nighttemp>13</nighttemp>
+                    <daywind>北</daywind>
+                    <nightwind>北</nightwind>
+                    <daypower>4</daypower>
+                    <nightpower>4</nightpower>
+                </cast>
+                <cast>
+                    <date>2021-10-22</date>
+                    <week>5</week>
+                    <dayweather>阴</dayweather>
+                    <nightweather>阴</nightweather>
+                    <daytemp>18</daytemp>
+                    <nighttemp>14</nighttemp>
+                    <daywind>北</daywind>
+                    <nightwind>北</nightwind>
+                    <daypower>4</daypower>
+                    <nightpower>4</nightpower>
+                </cast>
+                <cast>
+                    <date>2021-10-23</date>
+                    <week>6</week>
+                    <dayweather>多云</dayweather>
+                    <nightweather>阴</nightweather>
+                    <daytemp>19</daytemp>
+                    <nighttemp>15</nighttemp>
+                    <daywind>东北</daywind>
+                    <nightwind>东北</nightwind>
+                    <daypower>4</daypower>
+                    <nightpower>4</nightpower>
+                </cast>
+            </casts>
+        </forecast>
+    </forecasts>
+</response>

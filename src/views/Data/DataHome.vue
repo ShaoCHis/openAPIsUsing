@@ -15,12 +15,14 @@
                  round></el-button>
     </el-header>
     <div id="container">
-      <img :src="map" alt="" style="width:400px;height:400px;position:absolute;left: 13%;top: 25%">
+      <img :src="map" alt="" style="width:400px;height:400px;position:absolute;left: 13%;top: 15%">
+      <span style="width:400px;position:absolute;left: 13%;top: 75%;font-size: 20px;font-style: italic;font-weight: bold">{{text}}</span>
       <div style="height: 200px">
         <el-table
-            :data="weather.data.forecasts[0].casts"
+            :data="weather"
             border
-            style="width: 600px;position:absolute;right:10%;top: 15%;font-size: 18px">
+            style="width: 650px;position:absolute;right:7%;top: 10%;font-size: 18px">
+          <!--          :data="weather.data.forecasts[0].casts"-->
           <el-table-column
               type="index"
               width="50px">
@@ -44,8 +46,9 @@
               prop="dayweather"
               label="天气"
               width="120px">
-          </el-table-column><el-table-column
-              prop="nightpower"
+          </el-table-column>
+          <el-table-column
+              prop="power"
               label="风力"
               width="120px">
           </el-table-column>
@@ -53,7 +56,9 @@
         </el-table>
       </div>
       <span
-          style="width:670px;height:300px;position:absolute;right: 7%;top: 68%;font-size: 30px;font-style: italic;font-weight: bold">This is a little thumbnail of the city you want to get to know, you can look at the geographical distribution of the city and so on</span>
+          style="width:670px;height:300px;position:absolute;right: 7%;top: 48%;font-size: 20px;font-style: italic;font-weight: bold">{{ introduction }}</span>
+      <span
+          style="width:670px;height:300px;position:absolute;right: 7%;top: 77%;font-size: 30px;font-style: italic;font-weight: bold">This is a little thumbnail of the city you want to get to know, you can look at the geographical distribution of the city and so on</span>
     </div>
   </div>
 </template>
@@ -71,9 +76,12 @@ export default {
     return {
       adcode: "",
       location: "",
-      title:"",
+      title: "",
       weather: [],
-      map: null
+      map: null,
+      introduction: "",
+      airQuality: "",
+      text:""
     }
   },
 
@@ -88,10 +96,34 @@ export default {
         params: {
           key: "5c49a29bd677e41e010643b3e3cd1850",
           city: that.adcode,
-          extensions: "all"
+          extensions: "all",
+          output: "XML"
         }
       }).then((res) => {
-        that.weather = res;
+        let parser = null;
+        let xmlDoc = null;
+        if (window.DOMParser) {
+          parser = new DOMParser();
+          xmlDoc = parser.parseFromString(res.data, "text/xml");
+        } else // Internet Explorer
+        {
+          // eslint-disable-next-line no-undef
+          xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
+          xmlDoc.async = false;
+          xmlDoc.loadXML(res.data);
+        }
+        let x = xmlDoc.getElementsByTagName("cast");
+        let temp = [];
+        for (let i = 0; i < x.length; i++) {
+          temp.push({
+            date: x[i].childNodes[0].innerHTML,
+            daytemp: x[i].childNodes[4].innerHTML,
+            nighttemp: x[i].childNodes[5].innerHTML,
+            dayweather: x[i].childNodes[2].innerHTML,
+            power: x[i].childNodes[9].innerHTML
+          });
+        }
+        that.weather = temp;
       })
     },
 
@@ -119,6 +151,43 @@ export default {
       })
     },
 
+    async getIntroduction() {
+      let that = this;
+      let newUrl = "//zh.wikipedia.org/api/rest_v1/page/summary/" + that.title;
+      axios({
+        methods: 'get',
+        url: newUrl,
+      }).then((res) => {
+        console.log(res);
+        that.introduction = res.data.extract
+        console.log(that.introduction)
+      })
+    },
+
+    async getAirQuality() {
+      let that = this;
+      let newUrl = "http://route.showapi.com/104-42";
+      axios({
+        methods: 'get',
+        url: newUrl,
+        params: {
+          showapi_appid: "797072",
+          showapi_sign: "f9f90e83fc5542a5af26750fc71ed747",
+          area: that.title
+        }
+      }).then((res) => {
+        if (res.data.showapi_res_code != "0") {
+          that.$message.error("There is something wrong!Please try again!");
+          return;
+        }
+        that.airQuality = res.data.showapi_res_body;
+        that.text="空气质量(单位ug/m3):so2:"+that.airQuality.so2+"(二氧化硫平均一小时);o3:"+that.airQuality.o3+"(臭氧平均一小时);pm2.5:"+that.airQuality.pm2_5+"(pm2.5平均一小时);空气质量指数："+that.airQuality.quality;
+      }).catch((res) => {
+        console.log(res);
+        that.$message.error("There is something wrong!Please try again!");
+      })
+    },
+
     show() {
       this.$alert(
           "Welcome to my web;There I use some open APIS to support this web service.As you can see,when you type a city name,you will get many information about it.That's the function this web has!",
@@ -138,9 +207,11 @@ export default {
   created() {
     this.adcode = this.$route.params.adcode;
     this.location = this.$route.params.location;
-    this.title=this.$route.params.title;
+    this.title = this.$route.params.title;
     this.getWeather();
     this.getMap();
+    this.getIntroduction();
+    this.getAirQuality();
   },
 }
 </script>

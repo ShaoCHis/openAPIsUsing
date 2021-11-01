@@ -1,5 +1,10 @@
 # city
 
+## API document
+```
+docway:http://xiaoyaoji.cn/project/1j9xLxTztWT/share/1jUZRU9WVMW
+```
+
 ## Project setup
 ```
 npm install
